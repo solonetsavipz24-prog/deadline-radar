@@ -4,15 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#100d1b" />
-    <meta name="description" content="Умови користування Deadline Radar." />
+    <meta name="description" content="Умови користування сервісом Deadline Radar." />
+    <meta property="og:title" content="Умови користування — Deadline Radar" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>Умови користування — Deadline Radar</title>
     <style>
       :root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#f1effa;background:#100d1b;font-synthesis:none;--purple:#a995ff;--muted:#b0aabd;--line:#342e48}
       *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% 0,#241b41,transparent 36%),#100d1b;line-height:1.7}
       header,main,footer{width:min(100% - 36px,820px);margin:auto}header{padding:24px 0;border-bottom:1px solid var(--line)}header a{color:#eeeaf8;text-decoration:none;font-weight:750;letter-spacing:-.3px}
       .mark{display:inline-grid;place-items:center;width:30px;height:30px;margin-right:8px;border-radius:9px;background:var(--purple);color:#171126}
-      main{padding:48px 0 64px}h1,h2{font-family:system-ui,sans-serif;letter-spacing:-.6px;line-height:1.25}h1{font-size:clamp(32px,6vw,46px);margin:0 0 8px}h2{font-size:18px;margin:28px 0 8px}p,li{color:var(--muted);font-size:14px}strong{color:#e8e3f0}.updated{font-size:12px;color:#938ba3}.notice{padding:14px 16px;border:1px solid #51436f;border-radius:10px;background:#211b30;color:#d9d0f5}
-      a{color:#c5b7ff}footer{padding:18px 0 28px;border-top:1px solid var(--line);font-size:12px;color:#91899e}footer a{margin-right:16px}
+      main{padding:42px 0 60px}h1,h2{letter-spacing:-.6px;line-height:1.25}h1{font-size:clamp(32px,6vw,46px);margin:0 0 8px}h2{font-size:18px;margin:27px 0 8px}p,li{color:var(--muted);font-size:14px}strong{color:#e8e3f0}.updated{font-size:12px;color:#938ba3}.notice{padding:14px 16px;border:1px solid #51436f;border-radius:10px;background:#211b30;color:#d9d0f5}
+      a{color:#c5b7ff}footer{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:18px 0 28px;border-top:1px solid var(--line);font-size:12px;color:#91899e}footer a{text-decoration:none}footer a:hover{text-decoration:underline}
+      .support{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #55466f;border-radius:7px;background:#251d35;color:#e4d8ff;text-decoration:none;font-weight:650}
+      @media(max-width:520px){main{padding-top:30px}p,li{font-size:13px}}
     </style>
   </head>
   <body>
@@ -20,21 +24,36 @@
     <main>
       <p class="updated">Останнє оновлення: 27 вересня 2026 року</p>
       <h1>Умови користування</h1>
-      <p>Користуючись Deadline Radar, ви погоджуєтеся з цими умовами та <a href="./privacy.html">Політикою приватності</a>.</p>
-      <p class="notice">Deadline Radar — навчальний планувальник, що надається «як є». Він не гарантує доставку браузерних нагадувань, безперервну доступність або збереження даних без резервних копій.</p>
-      <h2>Акаунт і відповідальність</h2>
+      <p>Користуючись Deadline Radar («Сервіс»), ви погоджуєтеся з цими умовами та <a href="./privacy.html">Політикою приватності</a>. Якщо ви не погоджуєтеся, не створюйте акаунт і не використовуйте хмарні функції.</p>
+      <p class="notice">Сервіс надається без оплати й «як є» для планування навчальних справ. Це не офіційний канал університету, не календар навчального закладу та не єдине джерело інформації про дедлайни.</p>
+
+      <h2>Акаунт і використання</h2>
       <ul>
-        <li>Використовуйте адресу пошти, до якої маєте доступ, і бережіть дані входу.</li>
-        <li>Ви відповідаєте за вміст завдань, правильність строків і резервне копіювання своїх даних.</li>
-        <li>Не завантажуйте незаконний, шкідливий або чужий приватний вміст.</li>
+        <li>Використовуйте адресу пошти, якою можете керувати; відповідайте за захист свого пароля та доступ до акаунта.</li>
+        <li>Під час входу Google діють також відповідні умови Google. Автентифікацію та хмарні дані обробляє Supabase.</li>
+        <li>Не використовуйте Сервіс для незаконної діяльності, атак, спаму, обходу захисту чи зберігання незаконного або чужого приватного вмісту.</li>
+        <li>Не вводьте паролі, платіжні дані чи іншу чутливу інформацію в описах завдань.</li>
       </ul>
-      <h2>Сторонні сервіси</h2>
-      <p>Хмарне збереження та автентифікація надаються Supabase. За бажанням можна входити через Google. Робота цих функцій залежить від конфігурації та доступності відповідних сервісів і регулюється також їхніми умовами.</p>
-      <h2>Видалення та зміни</h2>
-      <p>Ви можете видаляти власні завдання у застосунку. Запит на видалення акаунта можна передати супровіднику проєкту через <a href="https://github.com/solonetsavipz24-prog">GitHub-профіль</a>; пов’язані з акаунтом завдання будуть видалені. Умови можуть оновлюватися разом із сервісом.</p>
+
+      <h2>Ваші дані</h2>
+      <p>Ви зберігаєте права на доданий вами вміст і відповідаєте за його точність. Ви надаєте Сервісу та його технічним провайдерам лише обмежений дозвіл зберігати й передавати цей вміст, необхідний для роботи обраних вами функцій. Ви можете експортувати та видаляти завдання, а також видалити акаунт із меню профілю. Видалення акаунта є незворотним і видаляє пов’язані з ним хмарні завдання; технічні копії провайдера можуть залишатися протягом його звичайного строку резервування. Детальніше — у <a href="./privacy.html">Політиці приватності</a>.</p>
+
+      <h2>Доступність і нагадування</h2>
+      <p>Ми прагнемо підтримувати Сервіс, але не гарантуємо безперервний доступ, збереження даних без резервних копій чи доставку сповіщень. Браузерні нагадування працюють лише за наданого дозволу та поки сторінка відкрита. Перевіряйте дедлайни також у першоджерелах вашого навчального закладу й зберігайте важливі дані окремо.</p>
+
+      <h2>Добровільна підтримка</h2>
+      <p>Посилання <a href="https://donatello.to/solonetsavipz24-prog/about" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Buy me a coffee на Donatello</a> веде до добровільної підтримки автора через сторонню платформу. Вона не є оплатою Сервісу, не створює підписки чи права на додаткові функції та не є необхідною для користування. Платіж обробляє Donatello та його платіжні партнери за власними правилами; не надсилайте платіжні реквізити до Сервісу.</p>
+
+      <h2>Зміни та припинення</h2>
+      <p>Можливості, ці умови або роботу Сервісу може бути змінено чи припинено. Про суттєві зміни умов буде повідомлено оновленням дати на цій сторінці або доступним каналом у Сервісі. Якщо продовжуєте користуватися ним після оновлення, застосовується чинна редакція в межах, дозволених законодавством.</p>
+      <p>Ці умови не обмежують прав споживача, від яких не можна відмовитися за законом. Власник проєкту має перевірити документ відповідно до юрисдикції та способу комерційного використання перед запуском платних послуг.</p>
+
       <h2>Контакт</h2>
-      <p>З питаннями звертайтеся через <a href="https://github.com/solonetsavipz24-prog">GitHub-профіль супровідника проєкту</a>. Не публікуйте конфіденційні дані у відкритих обговореннях.</p>
+      <p>З питаннями щодо умов зверніться приватно через контактний канал у <a href="https://github.com/solonetsavipz24-prog">GitHub-профілі супровідника проєкту</a>. Не публікуйте конфіденційні дані у відкритих обговореннях.</p>
     </main>
-    <footer><a href="./">На головну</a><a href="./privacy.html">Політика приватності</a></footer>
+    <footer>
+      <a href="./">На головну</a><a href="./privacy.html">Політика приватності</a>
+      <a class="support" href="https://donatello.to/solonetsavipz24-prog/about" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">♡ Buy me a coffee</a>
+    </footer>
   </body>
 </html>

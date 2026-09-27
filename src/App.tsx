@@ -4,7 +4,7 @@ import type { Session } from '@supabase/supabase-js'
 import {
   ArrowDownUp, ArrowLeft, ArrowRight, Bell, BellOff, CalendarDays, Check,
   CheckCircle2, ChevronDown, Circle, Clock3, Download, ExternalLink, Filter,
-  KeyRound, LayoutList, Link as LinkIcon, LoaderCircle, LogOut, Mail, Pencil, Plus, Search,
+  Heart, KeyRound, LayoutList, Link as LinkIcon, LoaderCircle, LogOut, Mail, Pencil, Plus, Search,
   ShieldCheck, Sparkles, Target, Trash2, Upload, X,
 } from 'lucide-react'
 import { supabase, supabaseConfigured, supabaseConfigError } from './supabase'
@@ -103,6 +103,7 @@ function App() {
         setSession(nextSession)
         if (event === 'PASSWORD_RECOVERY') {
           setAuthPassword('')
+          if (nextSession?.user.email) setAuthEmail(nextSession.user.email)
           setAuthMode('recovery')
         } else if (event === 'SIGNED_IN') setAuthMode('signin')
         else if (event === 'SIGNED_OUT') {
@@ -110,7 +111,7 @@ function App() {
           loadedUserRef.current = ''
           setLoadedUserId('')
         }
-        setError('')
+        if (event === 'SIGNED_IN' || event === 'PASSWORD_RECOVERY') setError('')
       }
     })
     return () => {
@@ -569,7 +570,7 @@ function App() {
           <div className="reminder-control"><div className="tool-icon">{remindersEnabled ? <Bell size={17} /> : <BellOff size={17} />}</div><div><strong>Нагадування у браузері</strong><p>{!('Notification' in window) ? 'Браузер не підтримує сповіщення' : permission === 'denied' ? 'Дозвіл вимкнений у налаштуваннях браузера' : remindersEnabled ? 'Увімкнено · за 30 хв до дедлайну' : 'Вимкнено · увімкніть за бажанням'}</p></div><button className={remindersEnabled ? 'toggle enabled' : 'toggle'} role="switch" aria-checked={remindersEnabled} aria-label="Увімкнути нагадування" onClick={() => remindersEnabled ? (setRemindersEnabled(false), localStorage.setItem('deadline-radar-reminders', 'false')) : enableReminders()}><span /></button></div>
           <div className="backup-control"><BackupButtons onExport={exportBackup} onImport={importBackup} /></div>
         </section>
-        <footer className="footer"><span><Target size={15} /> deadline.radar</span><span className="footer-legal"><a href={`${import.meta.env.BASE_URL}privacy.html`}>Приватність</a><a href={`${import.meta.env.BASE_URL}terms.html`}>Умови</a></span><span>{cloudMode ? 'Ваші дані захищені політиками доступу акаунта.' : 'Локальні дані залишаються у цьому браузері.'}</span></footer>
+        <footer className="footer"><span><Target size={15} /> deadline.radar</span><span className="footer-legal"><a href={`${import.meta.env.BASE_URL}privacy.html`}>Приватність</a><a href={`${import.meta.env.BASE_URL}terms.html`}>Умови</a></span><CoffeeLink compact /><span>{cloudMode ? 'Ваші дані захищені політиками доступу акаунта.' : 'Локальні дані залишаються у цьому браузері.'}</span></footer>
       </main>
       {showForm && <TaskModal draft={draft} editing={Boolean(editing)} error={error} onChange={setDraft} onClose={() => setShowForm(false)} onSubmit={saveTask} />}
       {showDeleteAccount && <div className="modal-backdrop" onMouseDown={(event) => event.currentTarget === event.target && setShowDeleteAccount(false)}><form className="modal account-delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-account-title" onSubmit={deleteAccount}><div className="modal-head"><div><p className="eyebrow">Небезпечна дія</p><h2 id="delete-account-title">Видалити акаунт?</h2></div><button type="button" className="icon-button" onClick={() => setShowDeleteAccount(false)} aria-label="Закрити"><X size={19} /></button></div><p>Акаунт і всі його хмарні завдання буде видалено без можливості відновлення. Перед продовженням завантаж резервну копію, якщо хочеш зберегти дані.</p>{error && <div className="feedback error" role="alert">{error}</div>}<label className="field-label">Для підтвердження введи <strong>DELETE</strong><input autoComplete="off" required value={accountConfirmation} onChange={(event) => setAccountConfirmation(event.target.value)} placeholder="DELETE" /></label><div className="modal-actions"><button type="button" className="quiet-button" onClick={() => setShowDeleteAccount(false)}>Скасувати</button><button className="delete-account-button" type="submit" disabled={busy || accountConfirmation !== 'DELETE'}>{busy ? <LoaderCircle className="spin" size={16} /> : <Trash2 size={15} />} Видалити назавжди</button></div></form></div>}
@@ -674,6 +675,7 @@ function AuthScreen({ email, password, mode, busy, error, notice, confirmationPe
             </>}
           <p className="auth-security"><ShieldCheck size={15} /> Пароль захищено Supabase Auth. Ми його не зберігаємо.</p>
           <p className="auth-legal"><a href={`${import.meta.env.BASE_URL}privacy.html`} target="_blank" rel="noreferrer">Приватність</a><span>·</span><a href={`${import.meta.env.BASE_URL}terms.html`} target="_blank" rel="noreferrer">Умови користування</a></p>
+          <CoffeeLink />
         </div>
       </div>
     </div>
@@ -682,6 +684,21 @@ function AuthScreen({ email, password, mode, busy, error, notice, confirmationPe
 
 function GoogleMark() {
   return <svg className="google-mark" aria-hidden="true" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z" /><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.75 7.18l7.68 5.96c4.48-4.14 7.11-10.24 7.11-17.61Z" /><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.54 2.56 10.78l7.97-6.19Z" /><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.84l-7.68-5.96c-2.13 1.43-4.85 2.3-8.22 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z" /></svg>
+}
+
+function CoffeeLink({ compact = false }: { compact?: boolean }) {
+  return <a
+    className={`coffee-link${compact ? ' compact' : ''}`}
+    href="https://donatello.to/solonetsavipz24-prog/about"
+    target="_blank"
+    rel="noopener noreferrer"
+    referrerPolicy="no-referrer"
+    aria-label="Підтримати Deadline Radar на Donatello"
+  >
+    <Heart size={compact ? 14 : 16} />
+    <span>{compact ? 'Підтримати' : 'Buy me a coffee'}</span>
+    {!compact && <ExternalLink size={12} />}
+  </a>
 }
 
 function SummaryCard({ label, count, tone, icon, active, onClick }: { label: string; count: number; tone: string; icon: ReactNode; active: boolean; onClick: () => void }) {
