@@ -1,6 +1,6 @@
 # Deadline Radar
 
-Студентський менеджер дедлайнів українською. Плануйте завдання, відстежуйте статуси, переглядайте календар та отримуйте браузерні нагадування. Дані можна зберігати в Supabase і синхронізувати між пристроями або працювати у чітко позначеному локальному режимі.
+Студентський менеджер дедлайнів українською. Плануйте завдання, відстежуйте статуси, переглядайте календар та отримуйте браузерні нагадування. Акаунт підтримує Google OAuth та email/password з підтвердженням адреси й відновленням пароля. Дані синхронізуються через Supabase або зберігаються у чітко позначеному локальному режимі.
 
 ## Локальний запуск
 
@@ -16,7 +16,7 @@ npm run dev
 ## Увімкнення акаунтів і синхронізації
 
 1. Створіть проєкт у [Supabase](https://supabase.com/).
-2. У **SQL Editor** виконайте міграцію [`supabase/migrations/20260927000000_create_tasks.sql`](supabase/migrations/20260927000000_create_tasks.sql). Вона створює `public.tasks`, індекс та політики RLS: користувач може читати, створювати, змінювати й видаляти лише рядки зі своїм `auth.uid()`.
+2. У **SQL Editor** виконайте SQL-файли з `supabase/migrations/` за хронологічним порядком. Вони створюють `public.tasks`, політики RLS для власника, та захищену функцію видалення лише власного акаунта.
 3. У Supabase відкрийте **Project Settings → API** і скопіюйте Project URL та **publishable key** (або legacy anon key). Публічний ключ призначений для клієнтського застосунку; ніколи не використовуйте `service_role` key у фронтенді.
 4. Скопіюйте `.env.example` у `.env.local` та підставте значення:
 
@@ -26,8 +26,9 @@ npm run dev
    ```
 
    Не комітьте `.env.local` або інші секрети. Перезапустіть `npm run dev` після зміни env.
-5. У **Authentication → URL Configuration** додайте адресу застосунку до дозволених redirect URLs (локально, наприклад, `http://localhost:5173/**`). У **Authentication → Providers → Email** увімкніть email/password. Якщо підтвердження email увімкнене, новий користувач має перейти за листом-підтвердженням перед входом.
-6. Відкрийте застосунок, створіть акаунт або увійдіть. Для переходу між режимами є явні дії на екрані входу/у верхній панелі. Локальні й хмарні списки розділені; імпорт JSON додає копії завдань до активного простору. Для першого перенесення локального списку експортуйте його, увійдіть в акаунт і імпортуйте файл.
+5. У **Authentication → URL Configuration** задайте Site URL і дозвольте redirect URLs для застосунку. Для локальної розробки це `http://localhost:5173/**`; для опублікованого сайту див. GitHub Pages нижче. У **Authentication → Providers → Email** увімкніть email/password і email confirmation. Налаштуйте production SMTP у **Project Settings → Auth → SMTP Settings**: вбудована пошта Supabase призначена для тестування та обмежена, а не для надійного масового підтвердження. Після реєстрації користувач підтверджує адресу з листа; форма також дозволяє надіслати його повторно. Паролі для нових акаунтів мають містити щонайменше 8 символів.
+6. Для Google: створіть OAuth 2.0 **Web application** credentials у [Google Cloud Console](https://console.cloud.google.com/apis/credentials), налаштуйте OAuth consent screen / branding, додайте адресу сайту до authorized JavaScript origins, а callback Supabase `https://<PROJECT_REF>.supabase.co/auth/v1/callback` — до authorized redirect URIs. У Supabase відкрийте **Authentication → Providers → Google**, увімкніть провайдера та внесіть Client ID і Client Secret із Google. Client Secret зберігається тільки в Supabase — ніколи не додавайте його в `.env`, GitHub Actions variables чи frontend. У Google OAuth consent screen вкажіть актуальні посилання на privacy та terms зі свого домену.
+7. Відкрийте застосунок, створіть акаунт або увійдіть email/password чи Google. Є відновлення пароля поштою, повторне надсилання підтвердження і встановлення нового пароля після переходу за листом. Локальні й хмарні списки розділені; імпорт JSON додає копії завдань до активного простору.
 
 Якщо налаштована лише одна з двох змінних Supabase або запит завершується помилкою, застосунок показує помилку й не підміняє хмарні дані локальними. Для відновлення синхронізації перевірте URL, ключ, міграцію, мережу та RLS.
 
@@ -39,6 +40,10 @@ npm run dev
 - Пріоритет, повторення щодня/щотижня/щомісяця та предмет; пошук, фільтрація і сортування.
 - Нагадування браузера за 30 хвилин до дедлайну. Дозвіл запитується лише після явної дії; вкладка має бути відкрита для перевірки нагадувань.
 - Експорт/імпорт JSON для резервування та перенесення між режимами.
+- Вхід через Google або email/password, підтвердження пошти, повторне надсилання листа та відновлення пароля.
+- Самостійне видалення акаунта з видаленням його хмарних завдань (після застосування SQL-міграцій).
+- Опційна добровільна підтримка через Donatello; вона не відкриває платних функцій і не потрібна для користування.
+- Українські сторінки умов користування й приватності з інформацією про Supabase, Google OAuth, GitHub Pages, локальне сховище та добровільні донати.
 - Адаптивний інтерфейс із темною фіолетовою палітрою та українською локалізацією.
 
 У хмарному режимі зміни записуються в акаунт одразу, а список оновлюється після повернення до вкладки, щоб підхопити зміни з інших пристроїв.
@@ -62,6 +67,14 @@ npm run preview
 - `VITE_SUPABASE_URL` — Project URL вашого Supabase-проєкту.
 - `VITE_SUPABASE_ANON_KEY` — публічний publishable/anon key. Ніколи не додавайте `service_role` key.
 
-Повторіть налаштування **Authentication → URL Configuration** у Supabase: додайте `https://solonetsavipz24-prog.github.io` до Site URL і `https://solonetsavipz24-prog.github.io/deadline-radar/` до Redirect URLs. Спочатку застосуйте SQL-міграцію зі кроків вище. Після додавання змінних повторно запустіть workflow, щоб вони потрапили до статичної збірки.
+Спочатку застосуйте SQL-міграцію зі кроків вище. У **Authentication → URL Configuration** у Supabase додайте `https://solonetsavipz24-prog.github.io` як Site URL і `https://solonetsavipz24-prog.github.io/deadline-radar/` як Redirect URL. Для локального запуску додайте також `http://localhost:5173/`.
+
+У Google Cloud OAuth client задайте authorized JavaScript origin `https://solonetsavipz24-prog.github.io` та callback URL `https://<PROJECT_REF>.supabase.co/auth/v1/callback` (це URL Supabase-проєкту, а не GitHub Pages). Додайте URL публічних сторінок `https://solonetsavipz24-prog.github.io/deadline-radar/privacy.html` і `https://solonetsavipz24-prog.github.io/deadline-radar/terms.html` до consent screen. Звичайний `github.io` хост є спільним доменом: для зовнішнього OAuth-застосунку Google може вимагати домен, яким ви володієте, і верифікацію. Для запуску Google OAuth на широку аудиторію налаштуйте власний домен для GitHub Pages, підтвердьте домен у Google Search Console/consent screen і використовуйте його як origin, Privacy Policy URL та Terms URL. До публікації OAuth consent screen у режимі Testing вхід буде доступний лише тестовим користувачам.
+
+Для власного домену налаштуйте DNS та HTTPS у **Settings → Pages**, задайте GitHub Actions repository variable `VITE_BASE_PATH` зі значенням `/`, після чого запустіть deployment workflow повторно. Без цієї змінної залишається типовий шлях `/deadline-radar/`.
+
+Email confirmation потребує production SMTP у Supabase; перевірте sender domain, DNS/SPF/DKIM та шаблон листа. Листи підтвердження й відновлення мають вести на URL застосунку. Після додавання GitHub Actions variables повторно запустіть deployment workflow, щоб налаштування потрапили у статичну збірку.
+
+Після виконання міграцій користувачі можуть керувати завданнями та акаунтом з інтерфейсу: в меню профілю є вихід, лист для зміни пароля й незворотне видалення акаунта разом із його завданнями. До злиття міграцій у production застосунку ці дії акаунта будуть недоступні. Політика приватності й умови доступні зі сторінки входу та у корінні `public/privacy.html` і `public/terms.html`.
 
 Якщо variables не задані, публічний сайт усе одно запуститься в чітко позначеному локальному режимі; email-акаунти та синхронізація будуть недоступні. Змінні вбудовуються у frontend build, тому тут дозволено лише публічний Supabase key, захищений RLS-політиками.

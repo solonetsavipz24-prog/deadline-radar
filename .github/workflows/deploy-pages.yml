@@ -37,7 +37,7 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
-          VITE_BASE_PATH: /deadline-radar/
+          VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || '/deadline-radar/' }}
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       - name: Upload GitHub Pages artifact
