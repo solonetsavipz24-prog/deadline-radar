@@ -52,3 +52,16 @@ npm test
 npm run build
 npm run preview
 ```
+
+## Публічний запуск через GitHub Pages
+
+У репозиторії вже є workflow `.github/workflows/deploy-pages.yml`: після злиття в `main` він запускає lint, typecheck і тести, збирає SPA з правильним шляхом `/deadline-radar/` і публікує його в GitHub Pages. Його також можна запустити вручну з **Actions → Deploy Deadline Radar → Run workflow**.
+
+Перед першим запуском відкрийте **Settings → Pages** та виберіть **Source: GitHub Actions**. Для акаунтів і синхронізації додайте в **Settings → Secrets and variables → Actions → Variables**:
+
+- `VITE_SUPABASE_URL` — Project URL вашого Supabase-проєкту.
+- `VITE_SUPABASE_ANON_KEY` — публічний publishable/anon key. Ніколи не додавайте `service_role` key.
+
+Повторіть налаштування **Authentication → URL Configuration** у Supabase: додайте `https://solonetsavipz24-prog.github.io` до Site URL і `https://solonetsavipz24-prog.github.io/deadline-radar/` до Redirect URLs. Спочатку застосуйте SQL-міграцію зі кроків вище. Після додавання змінних повторно запустіть workflow, щоб вони потрапили до статичної збірки.
+
+Якщо variables не задані, публічний сайт усе одно запуститься в чітко позначеному локальному режимі; email-акаунти та синхронізація будуть недоступні. Змінні вбудовуються у frontend build, тому тут дозволено лише публічний Supabase key, захищений RLS-політиками.
